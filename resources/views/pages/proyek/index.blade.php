@@ -90,6 +90,7 @@
                                                 <img id="thumbnail-preview" src="" alt="Preview"
                                                     style="max-width: 100px; display: none;">
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="judul_proyek">Judul Proyek</label>
                                                 <input type="text" class="form-control" id="judul_proyek"
@@ -156,6 +157,7 @@
                                                         src="{{ asset($item->thumbnail_proyek) }}" alt="Thumbnail"
                                                         style="max-width: 100px; display: block;">
                                                 </div>
+
                                                 <div class="form-group">
                                                     <label for="judul_proyek">Judul Proyek</label>
                                                     <input type="text" class="form-control" id="judul_proyek"
@@ -292,25 +294,25 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <script>
-        // Create Modal Image Preview
+        // Preview Image Function for Create Modal
         function previewImage(event) {
             var reader = new FileReader();
             reader.onload = function() {
                 var output = document.getElementById('thumbnail-preview');
                 output.src = reader.result;
-                output.style.display = 'block';
+                output.style.display = 'block'; // Show the preview image
             }
-            reader.readAsDataURL(event.target.files[0]);
+            reader.readAsDataURL(event.target.files[0]); // Read the file
         }
 
-        // Edit Modal Image Preview
+        // Preview Image Function for Edit Modal
         function previewImageEdit(event) {
             var reader = new FileReader();
             reader.onload = function() {
                 var output = document.getElementById('thumbnail-preview-edit');
                 output.src = reader.result;
             }
-            reader.readAsDataURL(event.target.files[0]);
+            reader.readAsDataURL(event.target.files[0]); // Read the file
         }
     </script>
 
