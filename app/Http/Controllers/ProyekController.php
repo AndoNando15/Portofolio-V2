@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
+
 use App\Models\GambarProyek;
 use App\Models\Proyek;
 use App\Models\Tech;
@@ -10,14 +10,13 @@ class ProyekController extends Controller
 {
     public function index()
     {
+        // Fetch projects along with related images
         $proyek = Proyek::with('gambarProyek')->get();  // Ensure images are loaded along with the project
 
         $tech = Tech::all(); // Pass Tech data to the view
 
         return view('pages.proyek.index', compact('proyek', 'tech'));
     }
-
-
 
     // Menyimpan data proyek
     public function store(Request $request)
@@ -65,9 +64,6 @@ class ProyekController extends Controller
         return redirect()->route('proyek.index')->with('success', 'Data proyek dan gambar berhasil ditambahkan!');
     }
 
-
-
-
     // Mengedit data proyek
     public function update(Request $request, $id)
     {
@@ -90,7 +86,7 @@ class ProyekController extends Controller
             }
 
             // Save new image
-            $imageName = time() . '.' . $request->file('thumbnail_proyek')->extension();
+            $imageName = uniqid(time() . '_') . '.' . $request->file('thumbnail_proyek')->extension();
             $request->file('thumbnail_proyek')->move(public_path('thumbnail_proyek'), $imageName);  // Store the new image
 
             // Update the record with the new image path
@@ -106,22 +102,61 @@ class ProyekController extends Controller
             'status' => $request->status,
         ]);
 
+        // Handle images deletion if specified
+        if ($request->has('delete_gambar')) {
+            foreach ($request->delete_gambar as $gambarId) {
+                $gambar = GambarProyek::findOrFail($gambarId);
+                if (file_exists(public_path($gambar->gambar_path))) {
+                    unlink(public_path($gambar->gambar_path));  // Delete the image file
+                }
+                $gambar->delete();  // Delete the image record
+            }
+        }
+
+        // Handle new images upload
+        if ($request->hasFile('gambar')) {
+            foreach ($request->file('gambar') as $gambarFile) {
+                $gambarImageName = uniqid(time() . '_') . '.' . $gambarFile->extension();
+                $gambarFile->move(public_path('images/gambar_proyek'), $gambarImageName);
+
+                GambarProyek::create([
+                    'proyek_id' => $proyek->id,
+                    'gambar_path' => 'gambar_proyek/' . $gambarImageName,
+                    'status' => $request->status,
+                ]);
+            }
+        }
+
         return redirect()->route('proyek.index')->with('success', 'Data proyek berhasil diperbarui!');
     }
-
 
     // Menghapus data proyek
     public function destroy($id)
     {
+        // Find the Proyek by ID
         $proyek = Proyek::findOrFail($id);
 
-        // Delete image file from the server
+        // Delete thumbnail image file from the server
         if ($proyek->thumbnail_proyek && file_exists(public_path($proyek->thumbnail_proyek))) {
             unlink(public_path($proyek->thumbnail_proyek));
         }
 
+        // Delete related GambarProyek images
+        foreach ($proyek->gambarProyek as $gambar) {
+            // Check if the image file exists, then delete it
+            if (file_exists(public_path($gambar->gambar_path))) {
+                unlink(public_path($gambar->gambar_path));  // Delete the image file
+            }
+
+            // Delete the GambarProyek record from the database
+            $gambar->delete();
+        }
+
+        // Finally, delete the Proyek record
         $proyek->delete();
 
-        return redirect()->route('proyek.index')->with('success', 'Data proyek berhasil dihapus!');
+        // Redirect back with a success message
+        return redirect()->route('proyek.index')->with('success', 'Data proyek beserta gambar-gambarnya berhasil dihapus!');
     }
+
 }

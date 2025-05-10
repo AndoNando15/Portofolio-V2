@@ -168,22 +168,8 @@
                                                         style="max-width: 100px; display: block;">
                                                 </div>
 
-                                                <!-- Existing Gambar Proyek -->
-                                                <div class="form-group">
-                                                    <label for="gambar_proyek">Gambar Proyek</label>
-                                                    <div id="existing-gambar">
-                                                        @foreach ($item->gambarProyek as $gambar)
-                                                            <div class="form-group">
-                                                                <label>Existing Image:</label>
-                                                                <img src="{{ asset($gambar->gambar_path) }}"
-                                                                    alt="Gambar Proyek"
-                                                                    style="max-width: 100px; display: block;">
-                                                                <input type="checkbox" name="delete_gambar[]"
-                                                                    value="{{ $gambar->id }}"> Delete this image
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
+
+
 
                                                 <!-- Upload New Gambar -->
                                                 <div class="form-group">
@@ -238,7 +224,31 @@
                                                         </option>
                                                     </select>
                                                 </div>
+                                                <!-- Existing Gambar Proyek -->
+                                                <div class="form-group">
+                                                    <label for="gambar_proyek">Gambar Proyek:</label>
+                                                    <div id="existing-gambar">
+                                                        @foreach ($item->gambarProyek as $index => $gambar)
+                                                            <div class="form-group">
+                                                                <label>Gambar {{ $index + 1 }}:</label>
+                                                                <!-- Display image number -->
+                                                                <img src="{{ asset('images/' . $gambar->gambar_path) }}"
+                                                                    alt="Gambar Path" width="100" height="auto">
+                                                                <input type="checkbox" name="delete_gambar[]"
+                                                                    value="{{ $gambar->id }}"> Delete this image
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
 
+
+                                                <!-- New Gambar Proyek -->
+                                                <div class="form-group">
+                                                    <label for="gambar">Tambah Gambar Proyek</label>
+                                                    <input type="file" class="form-control-file" id="gambar"
+                                                        name="gambar[]" accept="image/*" multiple>
+                                                    <small>Upload multiple images if necessary</small>
+                                                </div>
                                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Batal</button>
@@ -266,25 +276,6 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <!-- Thumbnail -->
-                                            <div class="form-group">
-                                                <label for="thumbnail_proyek">Thumbnail:</label>
-                                                <img src="{{ asset($item->thumbnail_proyek) }}" class="img-fluid"
-                                                    alt="Thumbnail Proyek" style="max-width: 100px; display: block;">
-                                            </div>
-
-                                            <!-- Gambar Proyek -->
-                                            <div class="form-group">
-                                                <label for="gambar_proyek">Gambar Proyek:</label>
-                                                @foreach ($item->gambarProyek as $gambar)
-                                                    <div class="form-group">
-                                                        <img src="{{ asset($gambar->gambar_path) }}" alt="Gambar Proyek"
-                                                            style="max-width: 100px; display: block;">
-                                                    </div>
-                                                @endforeach
-                                            </div>
-
-
                                             <!-- Judul Proyek -->
                                             <div class="form-group">
                                                 <label for="judul_proyek">Judul Proyek:</label>
@@ -314,6 +305,21 @@
                                                 <label for="status">Status:</label>
                                                 <p>{{ $item->status }}</p>
                                             </div>
+
+                                            <!-- Gambar Proyek (Moved to the bottom) -->
+                                            <!-- Gambar Proyek -->
+                                            <div class="form-group">
+                                                <label for="gambar_proyek">Gambar Proyek:</label>
+                                                @foreach ($item->gambarProyek as $index => $gambar)
+                                                    <div class="form-group">
+                                                        <label>Gambar {{ $index + 1 }}:</label>
+                                                        <!-- Display image number -->
+                                                        <img src="{{ asset('images/' . $gambar->gambar_path) }}"
+                                                            alt="Gambar Path" width="100" height="auto">
+                                                    </div>
+                                                @endforeach
+                                            </div>
+
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
@@ -323,7 +329,6 @@
                                 </div>
                             </div>
                         @endforeach
-
 
                         <!-- Delete Modal -->
                         @foreach ($proyek as $item)
@@ -354,6 +359,7 @@
                                 </div>
                             </div>
                         @endforeach
+
                     </div>
                 </div>
             </div>
