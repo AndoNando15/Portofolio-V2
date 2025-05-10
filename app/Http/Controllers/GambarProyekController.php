@@ -20,7 +20,7 @@ class GambarProyekController extends Controller
         return view('pages.proyek.subProyek.index', compact('gambarProyek', 'proyekList', 'tech'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request) //gambarControler
     {
         // Validate the input data
         $validated = $request->validate([

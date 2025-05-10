@@ -115,6 +115,13 @@
                                                 <textarea class="form-control" id="detail_proyek" name="detail_proyek" placeholder="Masukkan detail proyek" required></textarea>
                                             </div>
                                             <div class="form-group">
+                                                <label for="gambar">Tambah Gambar Proyek</label>
+                                                <input type="file" class="form-control-file" id="gambar"
+                                                    name="gambar[]" accept="image/*" multiple required>
+                                                <small>Upload multiple images if necessary</small>
+                                            </div>
+
+                                            <div class="form-group">
                                                 <label for="status">Status</label>
                                                 <select class="form-control" id="status" name="status" required>
                                                     <option value="Aktif">Aktif</option>
@@ -130,6 +137,7 @@
                             </div>
                         </div>
 
+                        <!-- Edit Modal -->
                         <!-- Edit Modal -->
                         @foreach ($proyek as $item)
                             <div class="modal fade" id="editModal-{{ $item->id }}" tabindex="-1" role="dialog"
@@ -148,6 +156,8 @@
                                                 enctype="multipart/form-data">
                                                 @csrf
                                                 @method('PUT')
+
+                                                <!-- Thumbnail Proyek -->
                                                 <div class="form-group">
                                                     <label for="thumbnail_proyek">Thumbnail Proyek</label>
                                                     <input type="file" class="form-control-file" id="thumbnail_proyek"
@@ -158,16 +168,46 @@
                                                         style="max-width: 100px; display: block;">
                                                 </div>
 
+                                                <!-- Existing Gambar Proyek -->
+                                                <div class="form-group">
+                                                    <label for="gambar_proyek">Gambar Proyek</label>
+                                                    <div id="existing-gambar">
+                                                        @foreach ($item->gambarProyek as $gambar)
+                                                            <div class="form-group">
+                                                                <label>Existing Image:</label>
+                                                                <img src="{{ asset($gambar->gambar_path) }}"
+                                                                    alt="Gambar Proyek"
+                                                                    style="max-width: 100px; display: block;">
+                                                                <input type="checkbox" name="delete_gambar[]"
+                                                                    value="{{ $gambar->id }}"> Delete this image
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+
+                                                <!-- Upload New Gambar -->
+                                                <div class="form-group">
+                                                    <label for="gambar">Tambah Gambar Proyek</label>
+                                                    <input type="file" class="form-control-file" id="gambar"
+                                                        name="gambar[]" accept="image/*" multiple>
+                                                    <small>Upload multiple images if necessary</small>
+                                                </div>
+
+                                                <!-- Judul Proyek -->
                                                 <div class="form-group">
                                                     <label for="judul_proyek">Judul Proyek</label>
                                                     <input type="text" class="form-control" id="judul_proyek"
                                                         name="judul_proyek" value="{{ $item->judul_proyek }}" required>
                                                 </div>
+
+                                                <!-- Jenis Proyek -->
                                                 <div class="form-group">
                                                     <label for="jenis_proyek">Jenis Proyek</label>
                                                     <input type="text" class="form-control" id="jenis_proyek"
                                                         name="jenis_proyek" value="{{ $item->jenis_proyek }}" required>
                                                 </div>
+
+                                                <!-- Teknologi -->
                                                 <div class="form-group">
                                                     <label for="teknologi">Teknologi</label>
                                                     <select class="form-control" id="teknologi" name="teknologi[]"
@@ -180,10 +220,14 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+
+                                                <!-- Detail Proyek -->
                                                 <div class="form-group">
                                                     <label for="detail_proyek">Detail Proyek</label>
                                                     <textarea class="form-control" id="detail_proyek" name="detail_proyek" required>{{ $item->detail_proyek }}</textarea>
                                                 </div>
+
+                                                <!-- Status -->
                                                 <div class="form-group">
                                                     <label for="status">Status</label>
                                                     <select class="form-control" id="status" name="status" required>
@@ -194,6 +238,7 @@
                                                         </option>
                                                     </select>
                                                 </div>
+
                                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Batal</button>
@@ -205,6 +250,8 @@
                         @endforeach
 
 
+
+                        <!-- Show Modal -->
                         <!-- Show Modal -->
                         @foreach ($proyek as $item)
                             <div class="modal fade" id="showModal-{{ $item->id }}" tabindex="-1" role="dialog"
@@ -219,27 +266,50 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
+                                            <!-- Thumbnail -->
                                             <div class="form-group">
                                                 <label for="thumbnail_proyek">Thumbnail:</label>
                                                 <img src="{{ asset($item->thumbnail_proyek) }}" class="img-fluid"
                                                     alt="Thumbnail Proyek" style="max-width: 100px; display: block;">
                                             </div>
+
+                                            <!-- Gambar Proyek -->
+                                            <div class="form-group">
+                                                <label for="gambar_proyek">Gambar Proyek:</label>
+                                                @foreach ($item->gambarProyek as $gambar)
+                                                    <div class="form-group">
+                                                        <img src="{{ asset($gambar->gambar_path) }}" alt="Gambar Proyek"
+                                                            style="max-width: 100px; display: block;">
+                                                    </div>
+                                                @endforeach
+                                            </div>
+
+
+                                            <!-- Judul Proyek -->
                                             <div class="form-group">
                                                 <label for="judul_proyek">Judul Proyek:</label>
                                                 <p>{{ $item->judul_proyek }}</p>
                                             </div>
+
+                                            <!-- Jenis Proyek -->
                                             <div class="form-group">
                                                 <label for="jenis_proyek">Jenis Proyek:</label>
                                                 <p>{{ $item->jenis_proyek }}</p>
                                             </div>
+
+                                            <!-- Teknologi -->
                                             <div class="form-group">
                                                 <label for="teknologi">Teknologi:</label>
                                                 <p>{{ $item->teknologi }}</p>
                                             </div>
+
+                                            <!-- Detail Proyek -->
                                             <div class="form-group">
                                                 <label for="detail_proyek">Detail Proyek:</label>
                                                 <p>{{ $item->detail_proyek }}</p>
                                             </div>
+
+                                            <!-- Status -->
                                             <div class="form-group">
                                                 <label for="status">Status:</label>
                                                 <p>{{ $item->status }}</p>
@@ -253,6 +323,7 @@
                                 </div>
                             </div>
                         @endforeach
+
 
                         <!-- Delete Modal -->
                         @foreach ($proyek as $item)

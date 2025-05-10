@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\GambarProyek;
 use App\Models\Proyek;
 use App\Models\Tech;
 use Illuminate\Http\Request;
@@ -9,7 +10,8 @@ class ProyekController extends Controller
 {
     public function index()
     {
-        $proyek = Proyek::all();
+        $proyek = Proyek::with('gambarProyek')->get();  // Ensure images are loaded along with the project
+
         $tech = Tech::all(); // Pass Tech data to the view
 
         return view('pages.proyek.index', compact('proyek', 'tech'));
@@ -20,41 +22,50 @@ class ProyekController extends Controller
     // Menyimpan data proyek
     public function store(Request $request)
     {
-        // Debugging: Check all input data
-        // dd($request->all());
-
-        // Validate the request
+        // Validate the input
         $request->validate([
             'thumbnail_proyek' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Validate image
             'judul_proyek' => 'required|string|max:255',
             'jenis_proyek' => 'required|string|max:255',
             'teknologi' => 'required|array', // Ensure this is an array
             'detail_proyek' => 'required|string|max:255',
+            'status' => 'required|string|in:Aktif,Nonaktif', // Ensure status is provided
         ]);
 
-        // Handle image upload
-        if ($request->hasFile('thumbnail_proyek')) {
-            $imageName = time() . '.' . $request->file('thumbnail_proyek')->extension();
-            // Store the image in the public folder
-            $request->file('thumbnail_proyek')->move(public_path('thumbnail_proyek'), $imageName);
+        // Handle the image upload for the project (thumbnail)
+        $thumbnailImageName = uniqid(time() . '_') . '.' . $request->file('thumbnail_proyek')->extension();
+        $request->file('thumbnail_proyek')->move(public_path('thumbnail_proyek'), $thumbnailImageName);
 
-            // Save project in the database
-            Proyek::create([
-                'thumbnail_proyek' => 'thumbnail_proyek/' . $imageName,  // Save the image path
-                'judul_proyek' => $request->judul_proyek,
-                'jenis_proyek' => $request->jenis_proyek,
-                'teknologi' => implode(',', $request->teknologi),  // Convert array to string for storage
-                'detail_proyek' => $request->detail_proyek,
-                'status' => $request->status,
-            ]);
+        // Store the project in the database
+        $proyek = Proyek::create([
+            'thumbnail_proyek' => 'thumbnail_proyek/' . $thumbnailImageName,  // Store the image path
+            'judul_proyek' => $request->judul_proyek,
+            'jenis_proyek' => $request->jenis_proyek,
+            'teknologi' => implode(',', $request->teknologi),  // Convert array to string for storage
+            'detail_proyek' => $request->detail_proyek,
+            'status' => $request->status,
+        ]);
 
-            // Redirect with success message
-            return redirect()->route('proyek.index')->with('success', 'Data proyek berhasil ditambahkan!');
+        // After the project is created, automatically associate images with it (if provided)
+        if ($request->hasFile('gambar')) {
+            foreach ($request->file('gambar') as $gambarFile) {
+                // Create a unique name for each image
+                $gambarImageName = uniqid(time() . '_') . '.' . $gambarFile->extension();
+                $gambarFile->move(public_path('images/gambar_proyek'), $gambarImageName);
+
+                // Store the image record in the GambarProyek table
+                GambarProyek::create([
+                    'proyek_id' => $proyek->id,  // Automatically use the ID of the newly created proyek
+                    'gambar_path' => 'gambar_proyek/' . $gambarImageName,  // Store the image path
+                    'status' => $request->status,  // Use the same status as the project
+                ]);
+            }
         }
 
-        // If no image file is uploaded, return an error
-        return back()->with('error', 'Thumbnail proyek harus diupload!');
+        return redirect()->route('proyek.index')->with('success', 'Data proyek dan gambar berhasil ditambahkan!');
     }
+
+
 
 
     // Mengedit data proyek
