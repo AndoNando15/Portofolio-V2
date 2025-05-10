@@ -101,6 +101,12 @@
                             </div>
                         </li>
                         <li>
+                            <a href="/kontak">
+                                <i class="icon-user"></i> <!-- Ikon yang lebih sesuai untuk halaman "Pesan" -->
+                                <span class="menu-text">Kontak</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="/pesan">
                                 <i class="icon-send"></i> <!-- Ikon yang lebih sesuai untuk halaman "Pesan" -->
                                 <span class="menu-text">Pesan</span>
@@ -113,9 +119,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="coming-soon.html">
-                                <i class="icon-clock"></i> <!-- Ikon yang lebih sesuai untuk halaman "Coming Soon" -->
-                                <span class="menu-text">Coming Soon</span>
+                            <a href="/error">
+                                <i class="icon-error"></i> <!-- Ikon yang lebih sesuai untuk halaman "Coming Soon" -->
+                                <span class="menu-text">Error 404</span>
                             </a>
                         </li>
                     </ul>
@@ -182,8 +188,9 @@
                                     <li>
                                         <p>#50 - Broken Button<span>40%</span></p>
                                         <div class="progress">
-                                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="40"
-                                                aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <div class="progress-bar bg-secondary" role="progressbar"
+                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                                style="width: 40%">
                                                 <span class="sr-only">40% Complete (success)</span>
                                             </div>
                                         </div>

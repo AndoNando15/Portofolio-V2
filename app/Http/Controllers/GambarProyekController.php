@@ -9,16 +9,32 @@ use Illuminate\Support\Facades\Storage;
 
 class GambarProyekController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Fetch all records from 'gambar_proyek' table
-        $gambarProyek = GambarProyek::all();
+        // Fetch filters
+        $proyek_id = $request->input('proyek_id');
+        $status = $request->input('status');
+
+        // Fetch all records from 'gambar_proyek' table and apply filters if necessary
+        $gambarProyek = GambarProyek::query();
+
+        if ($proyek_id) {
+            $gambarProyek->where('proyek_id', $proyek_id);
+        }
+
+        if ($status) {
+            $gambarProyek->where('status', $status);
+        }
+
+        $gambarProyek = $gambarProyek->get();
+
         // Get all projects for the dropdown
         $proyekList = Proyek::all();
         $tech = Tech::all();
 
         return view('pages.proyek.subProyek.index', compact('gambarProyek', 'proyekList', 'tech'));
     }
+
 
     public function store(Request $request) //gambarControler
     {

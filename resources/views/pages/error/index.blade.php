@@ -1,9 +1,10 @@
 @extends('layouts.base')
-@section('title', 'Kontak')
-@section('subTitle', 'Kontak')
+@section('title', 'ERROR 404')
+@section('subTitle', 'ERROR 404')
 
 @section('content')
     <div class="main-container">
+
         <!-- Row start -->
         <div class="row gutters">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -11,55 +12,50 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="mb-3 d-flex justify-content-between align-items-center">
-                            Kontak Kami
+                            ERROR 404
                             <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createModal">Tambah
-                                Kontak</button>
+                                Data</button>
                         </h6>
 
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">No</th>
-                                        <th>Icon Kontak</th>
-                                        <th>Nama Kontak</th>
-                                        <th>Keterangan Kontak</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th class="text-center">No</th> <!-- Centered -->
+                                        <th>Text Error</th>
+                                        <th class="text-center">Status</th> <!-- Centered -->
+                                        <th class="text-center">Aksi</th> <!-- Centered -->
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($kontak->isEmpty())
+                                    @if ($errors->isEmpty())
                                         <tr>
-                                            <td colspan="6" class="text-center">
-                                                <div class="alert alert-warning">
+                                            <td colspan="4" class="text-center">
+                                                <div class="alert alert-secondary">
                                                     Belum ada data.
                                                 </div>
                                             </td>
                                         </tr>
                                     @else
-                                        @foreach ($kontak as $key => $item)
+                                        @foreach ($errors as $key => $error)
                                             <tr>
-                                                <td class="text-center">{{ $key + 1 }}</td>
-                                                <td><img src="{{ asset('icons/' . $item->icon_kontak) }}" alt="Icon"
-                                                        width="30" height="auto"></td>
-                                                <td>{{ $item->nama_kontak }}</td>
-                                                <td>{{ $item->keterangan_kontak }}</td>
+                                                <td class="text-center">{{ $key + 1 }}</td> <!-- Centered -->
+                                                <td>{{ $error->keterangan }}</td>
                                                 <td class="text-center">
                                                     <span class="status-label"
-                                                        style="background-color: {{ $item->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; 
-                                                           color: {{ $item->status == 'Aktif' ? 'green' : 'red' }}; 
-                                                           padding: 5px 10px; font-size: 12px;">
-                                                        {{ $item->status }}
+                                                        style="background-color: {{ $error->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; 
+                                                               color: {{ $error->status == 'Aktif' ? 'green' : 'red' }}; 
+                                                               padding: 5px 10px; font-size: 12px;">
+                                                        {{ $error->status }}
                                                     </span>
                                                 </td>
                                                 <td class="text-center">
                                                     <button class="btn btn-info btn-sm" data-toggle="modal"
-                                                        data-target="#showModal-{{ $item->id }}">Show</button>
+                                                        data-target="#showModal-{{ $error->id }}">Show</button>
                                                     <button class="btn btn-warning btn-sm" data-toggle="modal"
-                                                        data-target="#editModal-{{ $item->id }}">Edit</button>
+                                                        data-target="#editModal-{{ $error->id }}">Edit</button>
                                                     <button class="btn btn-danger btn-sm" data-toggle="modal"
-                                                        data-target="#deleteModal-{{ $item->id }}">Delete</button>
+                                                        data-target="#deleteModal-{{ $error->id }}">Delete</button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -69,13 +65,13 @@
                         </div>
 
                         <!-- Show Modal -->
-                        @foreach ($kontak as $item)
-                            <div class="modal fade" id="showModal-{{ $item->id }}" tabindex="-1" role="dialog"
+                        @foreach ($errors as $error)
+                            <div class="modal fade" id="showModal-{{ $error->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="showModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Detail Kontak</h5>
+                                            <h5 class="modal-title">Detail Error 404</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -83,25 +79,15 @@
                                         <div class="modal-body">
                                             <form>
                                                 <div class="form-group">
-                                                    <label for="icon_kontak-show">Icon Kontak</label>
-                                                    <input type="text" class="form-control" id="icon_kontak-show"
-                                                        value="{{ $item->icon_kontak }}" readonly>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="nama_kontak-show">Nama Kontak</label>
-                                                    <input type="text" class="form-control" id="nama_kontak-show"
-                                                        value="{{ $item->nama_kontak }}" readonly>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="keterangan_kontak-show">Keterangan Kontak</label>
-                                                    <input type="text" class="form-control" id="keterangan_kontak-show"
-                                                        value="{{ $item->keterangan_kontak }}" readonly>
+                                                    <label for="footer-show">Text Error</label>
+                                                    <input type="text" class="form-control" id="footer-show"
+                                                        value="{{ $error->keterangan }}" readonly>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="status-show">Status</label>
                                                     <input type="text" class="form-control" id="status-show"
-                                                        value="{{ $item->status }}" readonly
-                                                        style="background-color: {{ $item->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; color: {{ $item->status == 'Aktif' ? 'green' : 'red' }};">
+                                                        value="{{ $error->status }}" readonly
+                                                        style="background-color: {{ $error->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; color: {{ $error->status == 'Aktif' ? 'green' : 'red' }};">
                                                 </div>
                                             </form>
                                         </div>
@@ -115,44 +101,34 @@
                         @endforeach
 
                         <!-- Edit Modal -->
-                        @foreach ($kontak as $item)
-                            <div class="modal fade" id="editModal-{{ $item->id }}" tabindex="-1" role="dialog"
+                        @foreach ($errors as $error)
+                            <div class="modal fade" id="editModal-{{ $error->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="editModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Edit Kontak</h5>
+                                            <h5 class="modal-title">Edit Error 404</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{{ route('kontak.update', $item->id) }}" method="POST">
+                                            <form action="{{ route('error.update', $error->id) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="form-group">
-                                                    <label for="icon_kontak-edit">Icon Kontak</label>
-                                                    <input type="text" class="form-control" id="icon_kontak-edit"
-                                                        name="icon_kontak" value="{{ $item->icon_kontak }}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="nama_kontak-edit">Nama Kontak</label>
-                                                    <input type="text" class="form-control" id="nama_kontak-edit"
-                                                        name="nama_kontak" value="{{ $item->nama_kontak }}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="keterangan_kontak-edit">Keterangan Kontak</label>
-                                                    <input type="text" class="form-control"
-                                                        id="keterangan_kontak-edit" name="keterangan_kontak"
-                                                        value="{{ $item->keterangan_kontak }}">
+                                                    <label for="footer-edit">Text Error</label>
+                                                    <input type="text" class="form-control" id="footer-edit"
+                                                        name="keterangan" value="{{ $error->keterangan }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="status-edit">Status</label>
                                                     <select class="form-control" id="status-edit" name="status">
                                                         <option value="Aktif"
-                                                            {{ $item->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                                            {{ $error->status == 'Aktif' ? 'selected' : '' }}>Aktif
+                                                        </option>
                                                         <option value="Nonaktif"
-                                                            {{ $item->status == 'Nonaktif' ? 'selected' : '' }}>Nonaktif
+                                                            {{ $error->status == 'Nonaktif' ? 'selected' : '' }}>Nonaktif
                                                         </option>
                                                     </select>
                                                 </div>
@@ -175,28 +151,18 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Tambah Kontak</h5>
+                                        <h5 class="modal-title">Tambah Error 404</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{ route('kontak.store') }}" method="POST">
+                                        <form action="{{ route('error.store') }}" method="POST">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="icon_kontak-create">Icon Kontak</label>
-                                                <input type="text" class="form-control" id="icon_kontak-create"
-                                                    name="icon_kontak" placeholder="Masukkan icon kontak">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="nama_kontak-create">Nama Kontak</label>
-                                                <input type="text" class="form-control" id="nama_kontak-create"
-                                                    name="nama_kontak" placeholder="Masukkan nama kontak">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="keterangan_kontak-create">Keterangan Kontak</label>
-                                                <input type="text" class="form-control" id="keterangan_kontak-create"
-                                                    name="keterangan_kontak" placeholder="Masukkan keterangan kontak">
+                                                <label for="footer-create">Text Error</label>
+                                                <input type="text" class="form-control" id="footer-create"
+                                                    name="keterangan" placeholder="Masukkan Text Error">
                                             </div>
                                             <div class="form-group">
                                                 <label for="status-create">Status</label>
@@ -217,23 +183,23 @@
                         </div>
 
                         <!-- Delete Modal -->
-                        @foreach ($kontak as $item)
-                            <div class="modal fade" id="deleteModal-{{ $item->id }}" tabindex="-1" role="dialog"
+                        @foreach ($errors as $error)
+                            <div class="modal fade" id="deleteModal-{{ $error->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="deleteModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel">Delete Kontak</h5>
+                                            <h5 class="modal-title" id="deleteModalLabel">Delete Error 404</h5>
                                             <button type="button" class="close" data-dismiss="modal"
                                                 aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            Are you sure you want to delete this contact?
+                                            Are you sure you want to delete this error?
                                         </div>
                                         <div class="modal-footer">
-                                            <form action="{{ route('kontak.destroy', $item->id) }}" method="POST">
+                                            <form action="{{ route('error.destroy', $error->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-secondary"
@@ -252,5 +218,6 @@
             </div>
         </div>
         <!-- Row end -->
+
     </div>
 @endsection

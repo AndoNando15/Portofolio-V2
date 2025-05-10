@@ -12,7 +12,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="mb-3 d-flex justify-content-between align-items-center">
-                            Judul
+                            Tentang Kami
                             <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createModal">Tambah
                                 Data</button>
                         </h6>

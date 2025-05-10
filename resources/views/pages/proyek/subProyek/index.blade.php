@@ -15,6 +15,41 @@
                             <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createModal">Tambah
                                 Gambar</button>
                         </h6>
+                        <div class="filter-container">
+                            <form method="GET" action="{{ route('subProyek.index') }}">
+                                <div class="form-row">
+                                    <!-- Filter by Proyek ID -->
+                                    <div class="col-md-4">
+                                        <label for="proyek_id">Filter by Proyek ID</label>
+                                        <select name="proyek_id" id="proyek_id" class="form-control">
+                                            <option value="">Select Proyek ID</option>
+                                            @foreach ($proyekList as $proyek)
+                                                <option value="{{ $proyek->id }}"
+                                                    {{ request('proyek_id') == $proyek->id ? 'selected' : '' }}>
+                                                    {{ $proyek->id }} - {{ $proyek->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Filter by Status -->
+                                    <div class="col-md-4">
+                                        <label for="status">Filter by Status</label>
+                                        <select name="status" id="status" class="form-control">
+                                            <option value="">Select Status</option>
+                                            <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>
+                                                Aktif</option>
+                                            <option value="Nonaktif"
+                                                {{ request('status') == 'Nonaktif' ? 'selected' : '' }}>Non-Aktif</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-primary mt-4">Filter</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
 
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
@@ -117,7 +152,8 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Edit Gambar Proyek</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -129,7 +165,8 @@
 
                                                 <div class="form-group">
                                                     <label for="proyek_id">Proyek ID</label>
-                                                    <select name="proyek_id" class="form-control" id="proyek_id" required>
+                                                    <select name="proyek_id" class="form-control" id="proyek_id"
+                                                        required>
                                                         @foreach ($proyekList as $proyek)
                                                             <option value="{{ $proyek->id }}"
                                                                 {{ $gambar->proyek_id == $proyek->id ? 'selected' : '' }}>
