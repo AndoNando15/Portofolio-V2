@@ -1,9 +1,10 @@
 @extends('layouts.base')
-@section('title', 'Kontak')
-@section('subTitle', 'Kontak')
+@section('title', 'Judul')
+@section('subTitle', 'Judul')
 
 @section('content')
     <div class="main-container">
+
         <!-- Row start -->
         <div class="row gutters">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -11,45 +12,42 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="mb-3 d-flex justify-content-between align-items-center">
-                            Kontak Kami
+                            Judul
                             <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createModal">Tambah
-                                Kontak</button>
+                                Data</button>
                         </h6>
 
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">No</th>
-                                        <th>Icon Kontak</th>
-                                        <th>Nama Kontak</th>
-                                        <th>Keterangan Kontak</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th class="text-center">No</th> <!-- Centered -->
+                                        <th>Judul</th>
+                                        <th>Kemampuan</th>
+                                        <th class="text-center">Status</th> <!-- Centered -->
+                                        <th class="text-center">Aksi</th> <!-- Centered -->
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($kontak->isEmpty())
+                                    @if ($judul->isEmpty())
                                         <tr>
-                                            <td colspan="6" class="text-center">
+                                            <td colspan="5" class="text-center">
                                                 <div class="alert alert-warning">
                                                     Belum ada data.
                                                 </div>
                                             </td>
                                         </tr>
                                     @else
-                                        @foreach ($kontak as $key => $item)
+                                        @foreach ($judul as $key => $item)
                                             <tr>
-                                                <td class="text-center">{{ $key + 1 }}</td>
-                                                <td><img src="{{ asset('icons/' . $item->icon_kontak) }}" alt="Icon"
-                                                        width="30" height="auto"></td>
-                                                <td>{{ $item->nama_kontak }}</td>
-                                                <td>{{ $item->keterangan_kontak }}</td>
+                                                <td class="text-center">{{ $key + 1 }}</td> <!-- Centered -->
+                                                <td>{!! $item->judul !!}</td>
+                                                <td>{!! $item->kemampuan !!}</td>
                                                 <td class="text-center">
                                                     <span class="status-label"
                                                         style="background-color: {{ $item->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; 
-                                                           color: {{ $item->status == 'Aktif' ? 'green' : 'red' }}; 
-                                                           padding: 5px 10px; font-size: 12px;">
+                                                               color: {{ $item->status == 'Aktif' ? 'green' : 'red' }}; 
+                                                               padding: 5px 10px; font-size: 12px;">
                                                         {{ $item->status }}
                                                     </span>
                                                 </td>
@@ -69,13 +67,13 @@
                         </div>
 
                         <!-- Show Modal -->
-                        @foreach ($kontak as $item)
+                        @foreach ($judul as $item)
                             <div class="modal fade" id="showModal-{{ $item->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="showModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Detail Kontak</h5>
+                                            <h5 class="modal-title">Detail Judul</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -83,19 +81,14 @@
                                         <div class="modal-body">
                                             <form>
                                                 <div class="form-group">
-                                                    <label for="icon_kontak-show">Icon Kontak</label>
-                                                    <input type="text" class="form-control" id="icon_kontak-show"
-                                                        value="{{ $item->icon_kontak }}" readonly>
+                                                    <label for="judul-show">Judul</label>
+                                                    <input type="text" class="form-control" id="judul-show"
+                                                        value="{{ $item->judul }}" readonly>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="nama_kontak-show">Nama Kontak</label>
-                                                    <input type="text" class="form-control" id="nama_kontak-show"
-                                                        value="{{ $item->nama_kontak }}" readonly>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="keterangan_kontak-show">Keterangan Kontak</label>
-                                                    <input type="text" class="form-control" id="keterangan_kontak-show"
-                                                        value="{{ $item->keterangan_kontak }}" readonly>
+                                                    <label for="kemampuan-show">Kemampuan</label>
+                                                    <input type="text" class="form-control" id="kemampuan-show"
+                                                        value="{{ $item->kemampuan }}" readonly>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="status-show">Status</label>
@@ -115,36 +108,28 @@
                         @endforeach
 
                         <!-- Edit Modal -->
-                        @foreach ($kontak as $item)
+                        @foreach ($judul as $item)
                             <div class="modal fade" id="editModal-{{ $item->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="editModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Edit Kontak</h5>
+                                            <h5 class="modal-title">Edit Judul</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{{ route('kontak.update', $item->id) }}" method="POST">
+                                            <form action="{{ route('judul.update', $item->id) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="form-group">
-                                                    <label for="icon_kontak-edit">Icon Kontak</label>
-                                                    <input type="text" class="form-control" id="icon_kontak-edit"
-                                                        name="icon_kontak" value="{{ $item->icon_kontak }}">
+                                                    <label for="judul-edit-{{ $item->id }}">Judul</label>
+                                                    <textarea class="form-control" id="judul-edit-{{ $item->id }}" name="judul">{{ $item->judul }}</textarea>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="nama_kontak-edit">Nama Kontak</label>
-                                                    <input type="text" class="form-control" id="nama_kontak-edit"
-                                                        name="nama_kontak" value="{{ $item->nama_kontak }}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="keterangan_kontak-edit">Keterangan Kontak</label>
-                                                    <input type="text" class="form-control"
-                                                        id="keterangan_kontak-edit" name="keterangan_kontak"
-                                                        value="{{ $item->keterangan_kontak }}">
+                                                    <label for="kemampuan-edit-{{ $item->id }}">Kemampuan</label>
+                                                    <textarea class="form-control" id="kemampuan-edit-{{ $item->id }}" name="kemampuan">{{ $item->kemampuan }}</textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="status-edit">Status</label>
@@ -169,34 +154,29 @@
                             </div>
                         @endforeach
 
+
+                        <!-- Create Modal -->
                         <!-- Create Modal -->
                         <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
                             aria-labelledby="createModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Tambah Kontak</h5>
+                                        <h5 class="modal-title">Tambah Data Judul</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{ route('kontak.store') }}" method="POST">
+                                        <form action="{{ route('judul.store') }}" method="POST">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="icon_kontak-create">Icon Kontak</label>
-                                                <input type="text" class="form-control" id="icon_kontak-create"
-                                                    name="icon_kontak" placeholder="Masukkan icon kontak">
+                                                <label for="judul-create">Judul</label>
+                                                <textarea class="form-control" id="judul-create" name="judul" placeholder="Masukkan judul"></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label for="nama_kontak-create">Nama Kontak</label>
-                                                <input type="text" class="form-control" id="nama_kontak-create"
-                                                    name="nama_kontak" placeholder="Masukkan nama kontak">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="keterangan_kontak-create">Keterangan Kontak</label>
-                                                <input type="text" class="form-control" id="keterangan_kontak-create"
-                                                    name="keterangan_kontak" placeholder="Masukkan keterangan kontak">
+                                                <label for="kemampuan-create">Kemampuan</label>
+                                                <textarea class="form-control" id="kemampuan-create" name="kemampuan" placeholder="Masukkan kemampuan"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="status-create">Status</label>
@@ -216,24 +196,25 @@
                             </div>
                         </div>
 
+
                         <!-- Delete Modal -->
-                        @foreach ($kontak as $item)
+                        @foreach ($judul as $item)
                             <div class="modal fade" id="deleteModal-{{ $item->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="deleteModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel">Delete Kontak</h5>
+                                            <h5 class="modal-title" id="deleteModalLabel">Delete Judul</h5>
                                             <button type="button" class="close" data-dismiss="modal"
                                                 aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            Are you sure you want to delete this contact?
+                                            Are you sure you want to delete this title?
                                         </div>
                                         <div class="modal-footer">
-                                            <form action="{{ route('kontak.destroy', $item->id) }}" method="POST">
+                                            <form action="{{ route('judul.destroy', $item->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-secondary"
@@ -252,5 +233,38 @@
             </div>
         </div>
         <!-- Row end -->
+
     </div>
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        // Initialize CKEditor for the 'create' form textareas (judul-create, kemampuan-create)
+        ClassicEditor
+            .create(document.querySelector('#judul-create'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#kemampuan-create'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Initialize CKEditor for each 'edit' form textarea (judul-edit, kemampuan-edit)
+        @foreach ($judul as $item)
+            ClassicEditor
+                .create(document.querySelector('#judul-edit-{{ $item->id }}'))
+                .catch(error => {
+                    console.error(error);
+                });
+
+            ClassicEditor
+                .create(document.querySelector('#kemampuan-edit-{{ $item->id }}'))
+                .catch(error => {
+                    console.error(error);
+                });
+        @endforeach
+    </script>
+
 @endsection

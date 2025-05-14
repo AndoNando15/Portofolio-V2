@@ -45,7 +45,7 @@
                                                 <td>{{ $item->judul_proyek }}</td>
                                                 <td>{{ $item->jenis_proyek }}</td>
                                                 <td>{{ $item->teknologi }}</td>
-                                                <td>{{ $item->detail_proyek }}</td>
+                                                <td>{!! $item->detail_proyek !!}</td>
                                                 <td>
                                                     <span class="status-label"
                                                         style="background-color: {{ $item->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; color: {{ $item->status == 'Aktif' ? 'green' : 'red' }};">
@@ -67,6 +67,7 @@
                             </table>
                         </div>
 
+                        <!-- Create Modal -->
                         <!-- Create Modal -->
                         <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
                             aria-labelledby="createModalLabel" aria-hidden="true">
@@ -137,7 +138,7 @@
                             </div>
                         </div>
 
-                        <!-- Edit Modal -->
+
                         <!-- Edit Modal -->
                         @foreach ($proyek as $item)
                             <div class="modal fade" id="editModal-{{ $item->id }}" tabindex="-1" role="dialog"
@@ -168,17 +169,6 @@
                                                         style="max-width: 100px; display: block;">
                                                 </div>
 
-
-
-
-                                                <!-- Upload New Gambar -->
-                                                <div class="form-group">
-                                                    <label for="gambar">Tambah Gambar Proyek</label>
-                                                    <input type="file" class="form-control-file" id="gambar"
-                                                        name="gambar[]" accept="image/*" multiple>
-                                                    <small>Upload multiple images if necessary</small>
-                                                </div>
-
                                                 <!-- Judul Proyek -->
                                                 <div class="form-group">
                                                     <label for="judul_proyek">Judul Proyek</label>
@@ -201,8 +191,7 @@
                                                         @foreach ($tech as $techItem)
                                                             <option value="{{ $techItem->id }}"
                                                                 {{ in_array($techItem->id, explode(',', $item->teknologi)) ? 'selected' : '' }}>
-                                                                {{ $techItem->tech }}
-                                                            </option>
+                                                                {{ $techItem->tech }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -210,7 +199,7 @@
                                                 <!-- Detail Proyek -->
                                                 <div class="form-group">
                                                     <label for="detail_proyek">Detail Proyek</label>
-                                                    <textarea class="form-control" id="detail_proyek" name="detail_proyek" required>{{ $item->detail_proyek }}</textarea>
+                                                    <textarea class="form-control" id="detail_proyek-edit-{{ $item->id }}" name="detail_proyek" required>{{ $item->detail_proyek }}</textarea>
                                                 </div>
 
                                                 <!-- Status -->
@@ -224,31 +213,7 @@
                                                         </option>
                                                     </select>
                                                 </div>
-                                                <!-- Existing Gambar Proyek -->
-                                                <div class="form-group">
-                                                    <label for="gambar_proyek">Gambar Proyek:</label>
-                                                    <div id="existing-gambar">
-                                                        @foreach ($item->gambarProyek as $index => $gambar)
-                                                            <div class="form-group">
-                                                                <label>Gambar {{ $index + 1 }}:</label>
-                                                                <!-- Display image number -->
-                                                                <img src="{{ asset('images/' . $gambar->gambar_path) }}"
-                                                                    alt="Gambar Path" width="100" height="auto">
-                                                                <input type="checkbox" name="delete_gambar[]"
-                                                                    value="{{ $gambar->id }}"> Delete this image
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
 
-
-                                                <!-- New Gambar Proyek -->
-                                                <div class="form-group">
-                                                    <label for="gambar">Tambah Gambar Proyek</label>
-                                                    <input type="file" class="form-control-file" id="gambar"
-                                                        name="gambar[]" accept="image/*" multiple>
-                                                    <small>Upload multiple images if necessary</small>
-                                                </div>
                                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Batal</button>
@@ -258,6 +223,7 @@
                                 </div>
                             </div>
                         @endforeach
+
 
 
 
@@ -366,9 +332,7 @@
         </div>
         <!-- Row end -->
     </div>
-@endsection
 
-@section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <script>
         // Preview Image Function for Create Modal
@@ -391,6 +355,25 @@
             }
             reader.readAsDataURL(event.target.files[0]); // Read the file
         }
+    </script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        // Initialize CKEditor for 'detail_proyek' textarea in the Create Modal
+        ClassicEditor
+            .create(document.querySelector('#detail_proyek'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Initialize CKEditor for each 'detail_proyek' textarea in the Edit Modals
+        @foreach ($proyek as $item)
+            ClassicEditor
+                .create(document.querySelector('#detail_proyek-edit-{{ $item->id }}'))
+                .catch(error => {
+                    console.error(error);
+                });
+        @endforeach
     </script>
 
 @endsection

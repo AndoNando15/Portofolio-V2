@@ -40,12 +40,12 @@
                                         @foreach ($errors as $key => $error)
                                             <tr>
                                                 <td class="text-center">{{ $key + 1 }}</td> <!-- Centered -->
-                                                <td>{{ $error->keterangan }}</td>
+                                                <td>{!! $error->keterangan !!}</td> <!-- Render HTML content -->
                                                 <td class="text-center">
                                                     <span class="status-label"
                                                         style="background-color: {{ $error->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; 
-                                                               color: {{ $error->status == 'Aktif' ? 'green' : 'red' }}; 
-                                                               padding: 5px 10px; font-size: 12px;">
+                               color: {{ $error->status == 'Aktif' ? 'green' : 'red' }}; 
+                               padding: 5px 10px; font-size: 12px;">
                                                         {{ $error->status }}
                                                     </span>
                                                 </td>
@@ -61,6 +61,7 @@
                                         @endforeach
                                     @endif
                                 </tbody>
+
                             </table>
                         </div>
 
@@ -117,9 +118,8 @@
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="form-group">
-                                                    <label for="footer-edit">Text Error</label>
-                                                    <input type="text" class="form-control" id="footer-edit"
-                                                        name="keterangan" value="{{ $error->keterangan }}">
+                                                    <label for="footer-edit-{{ $error->id }}">Text Error</label>
+                                                    <textarea name="keterangan" id="footer-edit-{{ $error->id }}" class="form-control">{{ $error->keterangan }}</textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="status-edit">Status</label>
@@ -133,8 +133,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <button type="submit" class="btn btn-primary">Simpan
-                                                        Perubahan</button>
+                                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                                     <button type="button" class="btn btn-secondary"
                                                         data-dismiss="modal">Batal</button>
                                                 </div>
@@ -144,6 +143,7 @@
                                 </div>
                             </div>
                         @endforeach
+
 
                         <!-- Create Modal -->
                         <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
@@ -161,8 +161,7 @@
                                             @csrf
                                             <div class="form-group">
                                                 <label for="footer-create">Text Error</label>
-                                                <input type="text" class="form-control" id="footer-create"
-                                                    name="keterangan" placeholder="Masukkan Text Error">
+                                                <textarea name="keterangan" id="footer-create" class="form-control" placeholder="Masukkan Text Error"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="status-create">Status</label>
@@ -220,4 +219,26 @@
         <!-- Row end -->
 
     </div>
+
+    <script script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        // Initialize CKEditor for the 'create' form textarea
+        ClassicEditor
+            .create(document.querySelector('#footer-create'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Initialize CKEditor for the 'edit' form textarea
+        @foreach ($errors as $error)
+            ClassicEditor
+                .create(document.querySelector('#footer-edit-{{ $error->id }}'))
+                .catch(error => {
+                    console.error(error);
+                });
+        @endforeach
+    </script>
+
+
 @endsection

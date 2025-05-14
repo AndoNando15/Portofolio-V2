@@ -45,7 +45,8 @@
                                                 <td class="text-center">{{ $key + 1 }}</td>
                                                 <td>{{ $item->nama_lengkap }}</td>
                                                 <td>{{ $item->pekerjaan }}</td>
-                                                <td>{{ $item->deskripsi_cv }}</td>
+                                                <!-- Display deskripsi_cv as plain text, escaping HTML tags -->
+                                                <td>{!! $item->deskripsi_cv !!}</td>
                                                 <td>
                                                     @if ($item->file_cv)
                                                         <a href="{{ asset('storage/' . $item->file_cv) }}" target="_blank"
@@ -57,8 +58,8 @@
                                                 <td class="text-center">
                                                     <span class="status-label"
                                                         style="background-color: {{ $item->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; 
-                                                               color: {{ $item->status == 'Aktif' ? 'green' : 'red' }}; 
-                                                               padding: 5px 10px; font-size: 12px;">
+                               color: {{ $item->status == 'Aktif' ? 'green' : 'red' }}; 
+                               padding: 5px 10px; font-size: 12px;">
                                                         {{ $item->status }}
                                                     </span>
                                                 </td>
@@ -74,6 +75,8 @@
                                         @endforeach
                                     @endif
                                 </tbody>
+
+
                             </table>
                         </div>
 
@@ -142,7 +145,7 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Edit Tentang Kami</h5>
+                                            <h5 class="modal-title">Edit Deskripsi CV</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -164,8 +167,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="deskripsi_cv-edit">Deskripsi CV</label>
-                                                    <input type="text" class="form-control" id="deskripsi_cv-edit"
-                                                        name="deskripsi_cv" value="{{ $item->deskripsi_cv }}">
+                                                    <textarea name="deskripsi_cv" id="deskripsi_cv-edit-{{ $item->id }}" class="form-control">{{ $item->deskripsi_cv }}</textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="file_cv-edit">File CV</label>
@@ -196,13 +198,15 @@
                             </div>
                         @endforeach
 
+
+                        <!-- Create Modal -->
                         <!-- Create Modal -->
                         <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
                             aria-labelledby="createModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Tambah Data Tentang Kami</h5>
+                                        <h5 class="modal-title">Tambah Deskripsi CV</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -223,8 +227,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="deskripsi_cv-create">Deskripsi CV</label>
-                                                <input type="text" class="form-control" id="deskripsi_cv-create"
-                                                    name="deskripsi_cv" placeholder="Masukkan deskripsi CV">
+                                                <textarea name="deskripsi_cv" id="deskripsi_cv-create" class="form-control" placeholder="Masukkan deskripsi CV"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="file_cv-create">File CV (PDF)</label>
@@ -248,6 +251,7 @@
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Delete Modal -->
                         @foreach ($tentangKami as $item)
@@ -565,4 +569,24 @@
             }
         }
     </script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        // Initialize CKEditor for the 'create' form textarea (deskripsi_cv-create)
+        ClassicEditor
+            .create(document.querySelector('#deskripsi_cv-create'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Initialize CKEditor for each 'edit' form textarea (deskripsi_cv-edit)
+        @foreach ($tentangKami as $item)
+            ClassicEditor
+                .create(document.querySelector('#deskripsi_cv-edit-{{ $item->id }}'))
+                .catch(error => {
+                    console.error(error);
+                });
+        @endforeach
+    </script>
+
 @endsection

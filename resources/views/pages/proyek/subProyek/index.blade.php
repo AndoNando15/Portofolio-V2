@@ -15,20 +15,21 @@
                             <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createModal">Tambah
                                 Gambar</button>
                         </h6>
-                        <div class="filter-container">
+                        <div class="filter-container mb-3">
                             <form method="GET" action="{{ route('subProyek.index') }}">
                                 <div class="form-row">
                                     <!-- Filter by Proyek ID -->
                                     <div class="col-md-4">
-                                        <label for="proyek_id">Filter by Proyek ID</label>
+                                        <label for="proyek_id">Filter Proyek</label>
                                         <select name="proyek_id" id="proyek_id" class="form-control">
-                                            <option value="">Select Proyek ID</option>
-                                            @foreach ($proyekList as $proyek)
+                                            <option value="">Tampilkan Semua</option>
+                                            @foreach ($proyekList as $key => $proyek)
                                                 <option value="{{ $proyek->id }}"
                                                     {{ request('proyek_id') == $proyek->id ? 'selected' : '' }}>
-                                                    {{ $proyek->id }} - {{ $proyek->name }}
+                                                    {{ $key + 1 }} - {{ $proyek->judul_proyek }}
                                                 </option>
                                             @endforeach
+
                                         </select>
                                     </div>
 
@@ -36,7 +37,6 @@
                                     <div class="col-md-4">
                                         <label for="status">Filter by Status</label>
                                         <select name="status" id="status" class="form-control">
-                                            <option value="">Select Status</option>
                                             <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>
                                                 Aktif</option>
                                             <option value="Nonaktif"

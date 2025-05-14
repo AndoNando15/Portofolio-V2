@@ -39,12 +39,12 @@
                                         @foreach ($footer as $key => $foot)
                                             <tr>
                                                 <td class="text-center">{{ $key + 1 }}</td> <!-- Centered -->
-                                                <td>{{ $foot->footer }}</td>
+                                                <td>{!! $foot->footer !!}</td> <!-- Render HTML content -->
                                                 <td class="text-center">
                                                     <span class="status-label"
                                                         style="background-color: {{ $foot->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; 
-                                                               color: {{ $foot->status == 'Aktif' ? 'green' : 'red' }}; 
-                                                               padding: 5px 10px; font-size: 12px;">
+                               color: {{ $foot->status == 'Aktif' ? 'green' : 'red' }}; 
+                               padding: 5px 10px; font-size: 12px;">
                                                         {{ $foot->status }}
                                                     </span>
                                                 </td>
@@ -60,6 +60,7 @@
                                         @endforeach
                                     @endif
                                 </tbody>
+
                             </table>
                         </div>
 
@@ -100,6 +101,7 @@
                         @endforeach
 
                         <!-- Edit Modal -->
+                        <!-- Edit Modal -->
                         @foreach ($footer as $foot)
                             <div class="modal fade" id="editModal-{{ $foot->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="editModalLabel" aria-hidden="true">
@@ -117,23 +119,20 @@
                                                 @method('PUT')
                                                 <div class="form-group">
                                                     <label for="footer-edit">Footer</label>
-                                                    <input type="text" class="form-control" id="footer-edit"
-                                                        name="footer" value="{{ $foot->footer }}">
+                                                    <textarea name="footer" id="footer-edit-{{ $foot->id }}" class="form-control">{{ $foot->footer }}</textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="status-edit">Status</label>
                                                     <select class="form-control" id="status-edit" name="status">
                                                         <option value="Aktif"
-                                                            {{ $foot->status == 'Aktif' ? 'selected' : '' }}>Aktif
-                                                        </option>
+                                                            {{ $foot->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
                                                         <option value="Nonaktif"
-                                                            {{ $foot->status == 'Nonaktif' ? 'selected' : '' }}>
-                                                            Nonaktif</option>
+                                                            {{ $foot->status == 'Nonaktif' ? 'selected' : '' }}>Nonaktif
+                                                        </option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <button type="submit" class="btn btn-primary">Simpan
-                                                        Perubahan</button>
+                                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                                     <button type="button" class="btn btn-secondary"
                                                         data-dismiss="modal">Batal</button>
                                                 </div>
@@ -144,6 +143,8 @@
                             </div>
                         @endforeach
 
+
+                        <!-- Create Modal -->
                         <!-- Create Modal -->
                         <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
                             aria-labelledby="createModalLabel" aria-hidden="true">
@@ -160,27 +161,26 @@
                                             @csrf
                                             <div class="form-group">
                                                 <label for="footer-create">Footer</label>
-                                                <input type="text" class="form-control" id="footer-create"
-                                                    name="footer" placeholder="Masukkan footer">
+                                                <textarea name="footer" id="footer-create" class="form-control" placeholder="Masukkan footer" required></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="status-create">Status</label>
-                                                <select class="form-control" id="status-create" name="status">
+                                                <select class="form-control" id="status-create" name="status" required>
                                                     <option value="Aktif">Aktif</option>
                                                     <option value="Nonaktif">Nonaktif</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-primary">Simpan</button>
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                    Batal
-                                                </button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Batal</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Delete Modal -->
                         @foreach ($footer as $foot)
@@ -220,4 +220,24 @@
         <!-- Row end -->
 
     </div>
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        // Initialize CKEditor for the 'create' form textarea
+        ClassicEditor
+            .create(document.querySelector('#footer-create'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Initialize CKEditor for the 'edit' form textarea for each error
+        @foreach ($footer as $foot)
+            ClassicEditor
+                .create(document.querySelector('#footer-edit-{{ $foot->id }}'))
+                .catch(error => {
+                    console.error(error);
+                });
+        @endforeach
+    </script>
+
 @endsection

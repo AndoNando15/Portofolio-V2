@@ -15,7 +15,7 @@ use App\Http\Controllers\KontakController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages.judul.index');
 });
 
 Route::resource('judul', JudulController::class);
@@ -27,6 +27,11 @@ Route::resource('pesan', PesanController::class);
 Route::resource('footer', FooterController::class);
 Route::resource('subProyek', GambarProyekController::class);
 Route::resource('tech', TechController::class);
-
 Route::resource('error', ErrorController::class);
 Route::resource('kontak', KontakController::class);
+
+
+// Route Error
+Route::fallback(function () {
+    return response()->view('404');
+});
