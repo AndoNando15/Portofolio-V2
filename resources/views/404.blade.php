@@ -42,10 +42,13 @@
     <div class="countdown-bg"></div>
 
     <div class="error-screen">
-        <h1>404</h1>
-        <h5>We're sorry!<br>The page you have requested cannot be found.</h5>
-        <a href="/judul" class="btn btn-primary">Go back to Dashboard</a>
+        @foreach ($errors as $error)
+            <h1>{!! $error->keterangan !!}</h1>
+        @endforeach
+
+        <a href="/error" class="btn btn-primary">Go back to Dashboard</a>
     </div>
+
 
     <!--**************************
    **************************

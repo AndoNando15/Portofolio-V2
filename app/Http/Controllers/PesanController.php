@@ -15,16 +15,21 @@ class PesanController extends Controller
     // Menyimpan data pesan
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'no_telepon' => 'required|string|max:255',
             'subjek' => 'required|string|max:255',
             'isi_pesan' => 'required|string',
-            'status' => 'required|string|in:Aktif,Nonaktif', // Validate status
-
+            'status' => 'required|string|in:Sudah Dibalas,Belum Dibalas', // Validasi status
+            'balasan' => 'nullable|string',  // Mengubah menjadi nullable
         ]);
 
+        // Jika balasan kosong, maka secara otomatis kita set menjadi 'Balasan'
+        $balasan = $request->balasan ?: 'Balasan';
+
+        // Menyimpan data ke database
         $pesan = Pesan::create([
             'nama' => $request->nama,
             'email' => $request->email,
@@ -32,10 +37,13 @@ class PesanController extends Controller
             'subjek' => $request->subjek,
             'isi_pesan' => $request->isi_pesan,
             'status' => $request->status,
+            'balasan' => $balasan,  // Menyimpan balasan (default jika tidak diisi)
         ]);
 
-        return redirect()->route('pesan.index')->with('success', 'Pesan successfully added!');
+        // Mengarahkan kembali dengan pesan sukses
+        return redirect()->route('pesan.index')->with('success', 'Pesan berhasil ditambahkan!');
     }
+
 
     // Mengedit data pesan
     public function update(Request $request, $id)
@@ -53,6 +61,23 @@ class PesanController extends Controller
         ]);
 
         return redirect()->route('pesan.index')->with('success', 'Pesan successfully update!');
+    }
+    public function balas(Request $request, $id)
+    {
+        $pesan = Pesan::findOrFail($id);
+
+        // Validate the reply
+        $request->validate([
+            'balasan' => 'required|string',
+        ]);
+
+        // Update the message with the reply and change the status to 'Sudah Dibalas'
+        $pesan->update([
+            'balasan' => $request->balasan,
+            'status' => 'Sudah Dibalas',
+        ]);
+
+        return redirect()->route('pesan.index')->with('success', 'Pesan berhasil dibalas!');
     }
 
     // Menghapus data pesan

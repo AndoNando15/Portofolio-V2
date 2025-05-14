@@ -17,7 +17,6 @@ class ErrorController extends Controller
         return view('pages.error.index', compact('errors'));
     }
 
-
     public function store(Request $request)
     {
         // Validate the incoming request

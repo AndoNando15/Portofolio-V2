@@ -48,7 +48,7 @@
                                                 <td>
                                                     <span class="status-label"
                                                         style="background-color: {{ $item->status == 'Aktif' ? '#d4edda' : '#f8d7da' }}; 
-                                                               color: {{ $item->status == 'Aktif' ? 'green' : 'red' }};">
+                                                               color: {{ $item->status == 'Aktif' ? 'green' : 'red' }}; padding: 5px 10px; font-size: 12px;">
                                                         {{ $item->status }}
                                                     </span>
                                                 </td>

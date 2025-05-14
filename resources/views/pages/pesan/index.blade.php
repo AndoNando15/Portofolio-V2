@@ -28,13 +28,14 @@
                                         <th>Subjek</th>
                                         <th>Isi Pesan</th>
                                         <th class="text-center">Status</th>
+                                        <th class="text-center">Balasan</th> <!-- New Column -->
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if ($pesan->isEmpty())
                                         <tr>
-                                            <td colspan="8" class="text-center">
+                                            <td colspan="9" class="text-center">
                                                 <div class="alert alert-warning">
                                                     Belum ada pesan.
                                                 </div>
@@ -48,16 +49,24 @@
                                                 <td>{{ $item->email }}</td>
                                                 <td>{{ $item->no_telepon }}</td>
                                                 <td>{{ $item->subjek }}</td>
-                                                <td>{{ $item->isi_pesan }}</td>
+                                                <td>{!! $item->isi_pesan !!}</td>
                                                 <td class="text-center">
                                                     <span class="status-label"
-                                                        style="background-color: {{ $item->status == 'Sudah Dibalas' ? '#d4edda' : '#f8d7da' }}; 
-                                                               color: {{ $item->status == 'Sudah Dibalas' ? 'green' : 'red' }}; 
-                                                               padding: 5px 10px; font-size: 12px;">
+                                                        style="background-color: {{ $item->status == 'Sudah Dibalas' ? '#d4edda' : '#f8d7da' }}; color: {{ $item->status == 'Sudah Dibalas' ? 'green' : 'red' }}; padding: 5px 10px; font-size: 12px;">
                                                         {{ $item->status }}
                                                     </span>
                                                 </td>
                                                 <td class="text-center">
+                                                    @if ($item->status == 'Belum Dibalas')
+                                                        <button class="btn btn-info btn-sm" data-toggle="modal"
+                                                            data-target="#balasModal-{{ $item->id }}">Balas</button>
+                                                    @else
+                                                        <span>{{ $item->balasan }}</span>
+                                                        <!-- Show response if already answered -->
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    <!-- Action buttons -->
                                                     <button class="btn btn-info btn-sm" data-toggle="modal"
                                                         data-target="#showModal-{{ $item->id }}">Show</button>
                                                     <button class="btn btn-warning btn-sm" data-toggle="modal"
@@ -69,6 +78,7 @@
                                         @endforeach
                                     @endif
                                 </tbody>
+
                             </table>
                         </div>
 
@@ -166,7 +176,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="isi_pesan-edit">Isi Pesan</label>
-                                                    <textarea class="form-control" id="isi_pesan-edit" name="isi_pesan" rows="3">{{ $item->isi_pesan }}</textarea>
+                                                    <textarea class="form-control" id="isi_pesan-edit-{{ $item->id }}" name="isi_pesan" rows="3">{{ $item->isi_pesan }}</textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="status-edit">Status</label>
@@ -232,6 +242,7 @@
                                                 <textarea class="form-control" id="isi_pesan-create" name="isi_pesan" rows="3"
                                                     placeholder="Masukkan isi pesan"></textarea>
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="status-create">Status</label>
                                                 <select class="form-control" id="status-create" name="status">
@@ -239,6 +250,7 @@
                                                     <option value="Belum Dibalas">Belum Dibalas</option>
                                                 </select>
                                             </div>
+
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-primary">Simpan</button>
                                                 <button type="button" class="btn btn-secondary"
@@ -249,6 +261,15 @@
                                 </div>
                             </div>
                         </div>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
                         <!-- Delete Modal -->
                         @foreach ($pesan as $item)
@@ -280,6 +301,40 @@
                             </div>
                         @endforeach
 
+
+                        {{-- balas modal --}}
+                        @foreach ($pesan as $item)
+                            <div class="modal fade" id="balasModal-{{ $item->id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="balasModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Balas Pesan</h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{ route('pesan.balas', $item->id) }}" method="POST">
+                                                @csrf
+                                                <div class="form-group">
+                                                    <label for="balasan">Balasan</label>
+                                                    <textarea class="form-control" id="balasan" name="balasan" rows="3" placeholder="Masukkan balasan"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary">Kirim Balasan</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Batal</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+
                     </div>
                 </div>
 
@@ -287,4 +342,25 @@
         </div>
         <!-- Row end -->
     </div>
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        // Initialize CKEditor for the 'create' form textarea
+        ClassicEditor
+            .create(document.querySelector('#isi_pesan-create'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Initialize CKEditor for the 'edit' form textarea for each error
+        @foreach ($pesan as $item)
+            ClassicEditor
+                .create(document.querySelector('#isi_pesan-edit-{{ $item->id }}'))
+                .catch(error => {
+                    console.error(error);
+                });
+        @endforeach
+    </script>
+
 @endsection

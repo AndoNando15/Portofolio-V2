@@ -37,12 +37,15 @@
                                     <div class="col-md-4">
                                         <label for="status">Filter by Status</label>
                                         <select name="status" id="status" class="form-control">
+                                            <option value="" {{ request('status') == '' ? 'selected' : '' }}>Semua
+                                                Status</option>
                                             <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>
                                                 Aktif</option>
                                             <option value="Nonaktif"
                                                 {{ request('status') == 'Nonaktif' ? 'selected' : '' }}>Non-Aktif</option>
                                         </select>
                                     </div>
+
 
                                     <div class="col-md-4">
                                         <button type="submit" class="btn btn-primary mt-4">Filter</button>
